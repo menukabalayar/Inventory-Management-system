@@ -16,7 +16,7 @@ body {
   padding: 30px;
   width: 320px;
   border-radius: 10px;
-  box-shadow: 0px 0px 20px rgba(184,132,35,0.5);
+  box-shadow: none;
 }
 
 .register-box h2 {

@@ -1,12 +1,7 @@
-
-import './App.css'
-import Register from './pages/public/register'
+import Register from "./pages/public/register";
 
 function App() {
-
-  return (
-    <Register/>
-  )
+  return <Register />;
 }
 
-export default App
+export default App;
