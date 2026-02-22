@@ -26,9 +26,12 @@ export const login = async (req, res) => {
       message: "Successfully logged in",
     });
   } catch (e) {
-    console.error(e);
-    res.status(500).json({ error: "Failed to login" });
-  }
+  console.error("LOGIN ERROR:", e);
+  res.status(500).json({ 
+    error: e.message,
+    fullError: e
+  });
+}
 };
 
 export const init = async (req, res) => {
