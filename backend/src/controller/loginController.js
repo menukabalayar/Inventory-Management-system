@@ -1,27 +1,57 @@
-const User = require("../models/User");
-const bcrypt = require("bcrypt");
+import { User } from "../../models/index.js";
+import { generateToken } from "../../security/jwt-util.js";
+import bcrypt from "bcrypt"; // ✅ import bcrypt
 
-exports.loginUser = async (req, res) => {
+const login = async (req, res) => {
   try {
     const { email, password } = req.body;
 
-    const user = await User.findOne({ email });
-    if (!user)
-      return res.status(404).json({ message: "User not found" });
+    if (!email) return res.status(400).send({ message: "Email is required" });
+    if (!password) return res.status(400).send({ message: "Password is required" });
 
-    const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch)
-      return res.status(401).json({ message: "Wrong password" });
+    const user = await User.findOne({ where: { email } });
+    if (!user) return res.status(404).send({ message: "User not found" });
 
-    res.status(200).json({
-      message: "Login successful",
-      user: {
-        id: user._id,
-        username: user.username,
-        email: user.email
-      }
+    // ✅ Compare hashed password with bcrypt
+    const isPasswordValid = await bcrypt.compare(password, user.password);
+    if (!isPasswordValid) {
+      return res.status(401).send({ message: "Incorrect password" });
+    }
+
+    // ✅ Generate token
+    const token = generateToken({ user: user.toJSON() });
+
+    // ✅ Send token & user info (without password)
+    const userData = user.toJSON();
+    delete userData.password;
+
+    return res.status(200).send({
+      data: { access_token: token, user: userData },
+      message: "Successfully logged in",
     });
-  } catch (error) {
-    res.status(500).json({ message: "Login failed" });
+  } catch (e) {
+    console.error(e);
+    res.status(500).json({ error: "Failed to login" });
   }
+};
+
+/**
+ * init - fetch current user (from JWT)
+ */
+const init = async (req, res) => {
+  try {
+    const user = req.user.user;
+    delete user.password;
+    res
+      .status(200)
+      .send({ data: user, message: "Successfully fetched current user" });
+  } catch (e) {
+    console.log(e);
+    res.status(500).json({ error: "Failed to fetch user" });
+  }
+};
+
+export const loginController = {
+  login,
+  init,
 };

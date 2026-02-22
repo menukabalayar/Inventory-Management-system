@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom"; // ✅ import useNavigate
 import "../../css/login.css";  
 
 export default function Login() {
@@ -7,14 +8,21 @@ export default function Login() {
     password: ""
   });
 
+  const navigate = useNavigate(); // ✅ create navigate function
+
   const handleChange = (e) => {
     setLoginData({ ...loginData, [e.target.name]: e.target.value });
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(loginData);
-    alert("Login Successful!");
+
+    // ✅ Here you can do real login logic (API call)
+    // For now, we'll just simulate login success:
+    console.log("Login Data:", loginData);
+
+    // ✅ Navigate to mainpage after successful login
+    navigate("/"); // assuming "/" is your HomePage/mainpage
   };
 
   return (
