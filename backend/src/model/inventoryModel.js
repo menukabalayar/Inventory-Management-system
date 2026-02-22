@@ -8,10 +8,13 @@ export const Inventory = sequelize.define("Inventory", {
     primaryKey: true,
   },
 
-  productName: {
-    type: DataTypes.STRING,
-    allowNull: false,
-  },
+ productName: {
+  type: DataTypes.STRING,
+  allowNull: false,
+  validate: {
+    notEmpty: true,
+  }
+},
 
   category: {
     type: DataTypes.STRING,
@@ -37,5 +40,14 @@ export const Inventory = sequelize.define("Inventory", {
   status: {
     type: DataTypes.ENUM("Available", "Out of Stock"),
     defaultValue: "Available",
-  }
+  },
+  categoryId: {
+  type: DataTypes.INTEGER,
+  allowNull: false,
+},
+
+supplierId: {
+  type: DataTypes.INTEGER,
+  allowNull: false,
+},
 });
