@@ -8,7 +8,9 @@ app.use(express.json()) //always necessary
 
 connection();
 
-app.use("/api/files", uploadRouter);
+app.use("/api/files", uploadRouter
+    
+);
 
 app.get("/",(req, res)=>{
     res.send("Application is running");
