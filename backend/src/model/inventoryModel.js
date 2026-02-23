@@ -1,3 +1,4 @@
+// src/model/inventoryModel.js
 import { DataTypes } from "sequelize";
 import { sequelize } from "../database/db.js";
 
@@ -8,13 +9,13 @@ export const Inventory = sequelize.define("Inventory", {
     primaryKey: true,
   },
 
- productName: {
-  type: DataTypes.STRING,
-  allowNull: false,
-  validate: {
-    notEmpty: true,
-  }
-},
+  productName: {
+    type: DataTypes.STRING,
+    allowNull: false,
+    validate: {
+      notEmpty: true,
+    },
+  },
 
   category: {
     type: DataTypes.STRING,
@@ -41,13 +42,19 @@ export const Inventory = sequelize.define("Inventory", {
     type: DataTypes.ENUM("Available", "Out of Stock"),
     defaultValue: "Available",
   },
-  categoryId: {
-  type: DataTypes.INTEGER,
-  allowNull: false,
-},
 
-supplierId: {
-  type: DataTypes.INTEGER,
-  allowNull: false,
-},
+  categoryId: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+  },
+
+  supplierId: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+  },
+
+  image: {
+    type: DataTypes.STRING, // store file path or URL
+    allowNull: true,
+  },
 });

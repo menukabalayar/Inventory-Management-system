@@ -1,46 +1,30 @@
-const Inventory = require("../models/Inventory");
+// src/controllers/inventoryController.js
+import { Inventory } from "../model/inventoryModel.js";
 
-// Add Item
-exports.addItem = async (req, res) => {
+export const addInventory = async (req, res) => {
   try {
-    const item = new Inventory(req.body);
-    await item.save();
-    res.status(201).json({ message: "Item added", item });
-  } catch (error) {
-    res.status(500).json({ message: "Item add failed" });
-  }
-};
+    const { productName, category, quantity, price, supplier, status, categoryId, supplierId } = req.body;
+    const image = req.file ? req.file.filename : null;
 
-// Get All Items
-exports.getItems = async (req, res) => {
-  try {
-    const items = await Inventory.find();
-    res.json(items);
-  } catch (error) {
-    res.status(500).json({ message: "Cannot fetch items" });
-  }
-};
+    const newProduct = await Inventory.create({
+      productName,
+      category,
+      quantity,
+      price,
+      supplier,
+      status,
+      categoryId: categoryId || 1,
+      supplierId: supplierId || 1,
+      image
+    });
 
-// Update Item
-exports.updateItem = async (req, res) => {
-  try {
-    const item = await Inventory.findByIdAndUpdate(
-      req.params.id,
-      req.body,
-      { new: true }
-    );
-    res.json(item);
-  } catch (error) {
-    res.status(500).json({ message: "Update failed" });
-  }
-};
-
-// Delete Item
-exports.deleteItem = async (req, res) => {
-  try {
-    await Inventory.findByIdAndDelete(req.params.id);
-    res.json({ message: "Item deleted" });
-  } catch (error) {
-    res.status(500).json({ message: "Delete failed" });
+    res.status(201).json({
+      message: "Product added successfully",
+      product: newProduct,
+      imageUrl: image ? `http://localhost:5000/uploads/${image}` : null
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Server error" });
   }
 };

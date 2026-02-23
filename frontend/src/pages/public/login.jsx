@@ -1,74 +1,98 @@
-// src/pages/public/Login.jsx
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import "../../css/login.css";
+import React, { useState } from "react";
+import { toast } from "react-hot-toast";
+import { Link, useNavigate } from "react-router-dom";
+import { apiRequest } from "../../utils/api.js";
+
 
 export default function Login() {
-  const [loginData, setLoginData] = useState({
-    email: "",
-    password: ""
-  });
-  const [error, setError] = useState("");
   const navigate = useNavigate();
 
-  const handleChange = (e) => {
-    setLoginData({ ...loginData, [e.target.name]: e.target.value });
-  };
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    setError("");
 
-    // ✅ Hardcoded login check
-    const dummyUser = {
-      email: "admin@example.com",
-      password: "123456",
-      username: "Admin",
-      role: "admin"
-    };
+    if (!email || !password) {
+      toast.error("Please fill all fields");
+      return;
+    }
 
-    if (
-      loginData.email === dummyUser.email &&
-      loginData.password === dummyUser.password
-    ) {
-      // Save token & user in localStorage (optional)
-      localStorage.setItem("token", "dummy-token-123"); 
-      localStorage.setItem("user", JSON.stringify(dummyUser));
+    setLoading(true);
+    const loadingToast = toast.loading("Logging in...");
 
-      // Navigate to main page
-      navigate("/"); // your HomePage/mainpage
-    } else {
-      setError("Invalid email or password!");
+    try {
+      const response = await apiRequest("POST", "/auth/login", {
+        data: { email, password },
+      });
+
+      toast.dismiss(loadingToast);
+
+      const res = response.data;
+
+      if (res.access_token) {
+        localStorage.setItem("token", res.access_token);
+
+        const userData = {
+          id: res.user.id,
+          name: res.user.name,
+          email: res.user.email,
+        };
+
+        localStorage.setItem("user", JSON.stringify(userData));
+
+        toast.success("Login successful!");
+        navigate("/", { replace: true });
+
+      } else {
+        toast.error(res.message || "Invalid credentials");
+      }
+
+    } catch (err) {
+      toast.dismiss(loadingToast);
+      toast.error(
+        err.response?.data?.message || "Login failed"
+      );
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
     <div className="login-container">
-      <form className="login-box" onSubmit={handleSubmit}>
-        <h2>Login</h2>
+      <div className="login-box">
 
-        {error && <div className="error" style={{ color: "red" }}>{error}</div>}
+        <h3 className="login-title">Login</h3>
 
-        <input
-          type="email"
-          name="email"
-          placeholder="Email"
-          value={loginData.email}
-          onChange={handleChange}
-          required
-        />
+        <form onSubmit={handleSubmit}>
 
-        <input
-          type="password"
-          name="password"
-          placeholder="Password"
-          value={loginData.password}
-          onChange={handleChange}
-          required
-        />
+          <label>Email</label>
+          <input
+            type="email"
+            className="login-input"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
 
-        <button type="submit">Login</button>
-      </form>
+          <label>Password</label>
+          <input
+            type="password"
+            className="login-input"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
+
+          <button type="submit" disabled={loading}>
+            {loading ? "Logging in..." : "Login"}
+          </button>
+
+          <div style={{ marginTop: "10px" }}>
+            Don't have an account? <Link to="/register">Register</Link>
+          </div>
+
+        </form>
+      </div>
     </div>
   );
 }
