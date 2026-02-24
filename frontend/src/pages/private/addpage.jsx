@@ -6,54 +6,60 @@ const AddInventory = () => {
   const [formData, setFormData] = useState({
     productName: "",
     category: "",
-    quantity: 0,
+    quantity: "",
     price: "",
     supplier: "",
-    status: "Available"
+    status: "Available",
+    categoryId: "",
+    supplierId: "",
   });
 
   const [image, setImage] = useState(null);
 
-  const handleChange = (e) => setFormData({ ...formData, [e.target.name]: e.target.value });
-  const handleImageChange = (e) => setImage(e.target.files[0]);
+  const handleChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value,
+    });
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     const data = new FormData();
-    for (let key in formData) data.append(key, formData[key]);
-    if (image) data.append("image", image);
+    Object.keys(formData).forEach((key) => {
+      data.append(key, formData[key]);
+    });
+    data.append("image", image);
 
     try {
-      const res = await axios.post("http://localhost:5000/api/inventory/add", data, {
-        headers: { "Content-Type": "multipart/form-data" }
-      });
-      console.log(res.data);
-      alert("Product Added Successfully!");
-      setFormData({ productName: "", category: "", quantity: 0, price: "", supplier: "", status: "Available" });
-      setImage(null);
-    } catch (err) {
-      console.error(err);
-      alert("Failed to add product!");
+      await axios.post("http://localhost:5000/api/inventory/add", data);
+      alert("Product added successfully");
+    } catch (error) {
+      console.error(error.response?.data || error.message);
+      alert(error.response?.data?.message || "Error");
     }
   };
 
   return (
-    <div className="add-container">
-      <h2>Add New Product</h2>
-      <form onSubmit={handleSubmit} className="add-form" encType="multipart/form-data">
-        <input type="text" name="productName" placeholder="Product Name" value={formData.productName} onChange={handleChange} required />
-        <input type="text" name="category" placeholder="Category" value={formData.category} onChange={handleChange} required />
-        <input type="number" name="quantity" placeholder="Quantity" value={formData.quantity} onChange={handleChange} required />
-        <input type="number" step="0.01" name="price" placeholder="Price" value={formData.price} onChange={handleChange} required />
-        <input type="text" name="supplier" placeholder="Supplier" value={formData.supplier} onChange={handleChange} required />
-        <select name="status" value={formData.status} onChange={handleChange}>
-          <option value="Available">Available</option>
-          <option value="Out of Stock">Out of Stock</option>
-        </select>
-        <input type="file" accept="image/*" onChange={handleImageChange} />
-        <button type="submit">Add Product</button>
-      </form>
-    </div>
+    <form onSubmit={handleSubmit} encType="multipart/form-data">
+      <input name="productName" placeholder="Product Name" onChange={handleChange} />
+      <input name="category" placeholder="Category" onChange={handleChange} />
+      <input name="quantity" type="number" placeholder="Quantity" onChange={handleChange} />
+      <input name="price" type="number" placeholder="Price" onChange={handleChange} />
+      <input name="supplier" placeholder="Supplier" onChange={handleChange} />
+      <input name="categoryId" type="number" placeholder="Category ID" onChange={handleChange} />
+      <input name="supplierId" type="number" placeholder="Supplier ID" onChange={handleChange} />
+
+      <select name="status" onChange={handleChange}>
+        <option value="Available">Available</option>
+        <option value="Out of Stock">Out of Stock</option>
+      </select>
+
+      <input type="file" onChange={(e) => setImage(e.target.files[0])} />
+
+      <button type="submit">Add Product</button>
+    </form>
   );
 };
 

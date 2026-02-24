@@ -1,30 +1,49 @@
-// src/controllers/inventoryController.js
 import { Inventory } from "../model/inventoryModel.js";
 
 export const addInventory = async (req, res) => {
   try {
     const { productName, category, quantity, price, supplier, status, categoryId, supplierId } = req.body;
-    const image = req.file ? req.file.filename : null;
 
-    const newProduct = await Inventory.create({
+    if (!req.file) return res.status(400).json({ message: "Image is required" });
+
+    // ✅ Input validation
+      if (!productName || !category || !supplier || !status) {
+      return res.status(400).json({ message: "Required text fields are missing" });
+    }
+
+    if (!quantity || isNaN(parseInt(quantity))) {
+      return res.status(400).json({ message: "Quantity must be a valid number" });
+    }
+
+    if (!price || isNaN(parseFloat(price))) {
+      return res.status(400).json({ message: "Price must be a valid number" });
+    }
+
+    if (!categoryId || isNaN(parseInt(categoryId))) {
+      return res.status(400).json({ message: "CategoryId must be a valid number" });
+    }
+
+    if (!supplierId || isNaN(parseInt(supplierId))) {
+      return res.status(400).json({ message: "SupplierId must be a valid number" });
+    }
+
+    // ✅ Safe parse
+    const newInventory = await Inventory.create({
       productName,
       category,
-      quantity,
-      price,
+      quantity: parseInt(quantity),
+      price: parseFloat(price),
       supplier,
       status,
-      categoryId: categoryId || 1,
-      supplierId: supplierId || 1,
-      image
+      categoryId: parseInt(categoryId),
+      supplierId: parseInt(supplierId),
+      image: req.file.filename,
     });
 
-    res.status(201).json({
-      message: "Product added successfully",
-      product: newProduct,
-      imageUrl: image ? `http://localhost:5000/uploads/${image}` : null
-    });
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ message: "Server error" });
+    res.status(201).json({ message: "Product added successfully", product: newInventory });
+
+  } catch (error) {
+    console.error("Full Error:", error);
+    res.status(500).json({ message: error.message });
   }
 };

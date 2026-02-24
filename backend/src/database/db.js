@@ -1,27 +1,15 @@
-// src/database/db.js
 import { Sequelize } from "sequelize";
 
-
-// Create sequelize instance
-export const sequelize = new Sequelize("InventorySystem", "postgres", "menuka", {
+export const sequelize = new Sequelize("ims", "root", "password", {
   host: "localhost",
-  dialect: "postgres",
+  dialect: "mysql",
 });
 
-// Connection and table creation
-export const connection = async () => {
+export const testDB = async () => {
   try {
-    // ❗ DO NOT connect during tests
-    if (process.env.NODE_ENV === "test") {
-      console.log("DB connection skipped in test mode");
-      return;
-    }
-
     await sequelize.authenticate();
-    await sequelize.sync({ alter: true });
-
-    console.log("Database connected successfully");
-  } catch (e) {
-    console.error("Database connection failed:", e.message);
+    console.log("Database connected successfully.");
+  } catch (error) {
+    console.error("Unable to connect to database:", error);
   }
 };
