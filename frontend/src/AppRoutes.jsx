@@ -9,6 +9,7 @@ const HomePage = React.lazy(() => import("./pages/private/mainpage.jsx"));
 const LoginPage = React.lazy(() => import("./pages/public/login.jsx"));
 const RegisterPage = React.lazy(() => import("./pages/public/register.jsx"));
 const AddProductPage = React.lazy(() => import("./pages/private/addpage.jsx"));
+const ProfilePage = React.lazy(() => import("./pages/private/profilepage.jsx"));
 
 const AppRoutes = ({ token,  setToken, setUser }) => {
   return (
@@ -28,6 +29,12 @@ const AppRoutes = ({ token,  setToken, setUser }) => {
         <Route element={<PrivateRoute token={token} />}>
           <Route path="/" element={<HomePage />} />
           <Route path="/add" element={<AddProductPage />} />
+          <Route
+            path="/profile"
+            element={
+              <ProfilePage currentUser={token} setToken={setToken} setUser={setUser} />
+            }
+          />
         </Route>
 
         {/* Unknown route: redirect to home */}

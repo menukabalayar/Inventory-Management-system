@@ -2,6 +2,7 @@
 import { User } from "../model/userModel.js";
 import { generateToken } from "../security/jwt-utils.js";
 import bcrypt from "bcrypt";
+import { authenticateToken } from "../middleware/token-middleware.js";
 
 export const login = async (req, res) => {
   try {

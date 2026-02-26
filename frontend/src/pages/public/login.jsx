@@ -38,6 +38,9 @@ export default function Login() {
           id: res.user.id,
           name: res.user.name,
           email: res.user.email,
+          address: res.user.address,
+          phone: res.user.phone,
+          gender: res.user.gender,
         };
 
         localStorage.setItem("user", JSON.stringify(userData));

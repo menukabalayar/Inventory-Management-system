@@ -1,14 +1,23 @@
-export const getUserProfile = (req, res) => {
-  const { id } = req.params;
-  res.json({ message: `Get user profile ${id}` });
+import { User } from "../model/userModel.js";
+
+export const getById = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const user = await User.findOne({ where: { id } });
+
+    if (!user) {
+      return res.status(404).send({
+        message: "User not found",
+      });
+    }
+
+    res.status(200).send({
+      data: user,
+      message: "User fetched successfully",
+    });
+  } catch (e) {
+    res.status(500).send({ message: e.message });
+  }
 };
 
-export const updateUserProfile = (req, res) => {
-  const { id } = req.params;
-  res.json({ message: `Update user profile ${id}` });
-};
-
-export const deleteUserProfile = (req, res) => {
-  const { id } = req.params;
-  res.json({ message: `Delete user profile ${id}` });
-};
