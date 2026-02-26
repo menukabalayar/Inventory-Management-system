@@ -2,11 +2,6 @@
 import express from "express";
 const router = express.Router();
 
-// Example data (replace with DB query if using a database)
-const inventories = [
-  { id: 1, name: "Item A", quantity: 10 },
-  { id: 2, name: "Item B", quantity: 5 },
-];
 
 // GET all inventories
 router.get("/", (req, res) => {

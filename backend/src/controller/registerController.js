@@ -1,30 +1,15 @@
-import bcrypt from "bcrypt";
-import { User } from "../model/userModel.js";
+import { User } from "../models/userModel.js";
 
-export const registerUser = async (req, res) => {
+export const register = async (req, res) => {
   try {
-    const { name, address, email, password, phone, gender } = req.body;
-
-    // 🔥 HASH PASSWORD HERE
-    const hashedPassword = await bcrypt.hash(password, 10);
-
-    const newUser = await User.create({
-      name,
-      address,
-      email,
-      password: hashedPassword,   // save hashed password
-      phone,
-      gender,
-    });
-
+    const { name, email, password } = req.body;
+    const user = await User.create({ name, email, password });
     res.status(201).json({
-      message: "User registered successfully",
-      user: newUser,
+      id: user.id,
+      name: user.name,
+      email: user.email,
     });
-
-  } catch (error) {
-    res.status(500).json({
-      error: error.message,
-    });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
   }
 };

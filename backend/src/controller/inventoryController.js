@@ -65,3 +65,11 @@ export const addInventory = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+ export const getAll = async (req, res) => {
+  try {
+    const inventories = await Inventory.findAll();
+    return res.status(200).json(inventories);
+  } catch (error) {
+    return res.status(500).json({ message: "Error fetching inventories" });
+  }
+};

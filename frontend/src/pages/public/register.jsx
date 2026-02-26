@@ -10,6 +10,7 @@ export default function Register() {
     username: "",
     email: "",
     password: "",
+    
     mobile: "",
     gender: "",
   });
