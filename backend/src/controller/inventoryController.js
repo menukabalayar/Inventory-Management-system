@@ -1,5 +1,23 @@
 import { Inventory } from "../model/inventoryModel.js";
 
+// Get all inventories
+export const getAllInventories = async (req, res) => {
+  try {
+    const inventories = await Inventory.findAll(); // Fetch all inventories
+    res.status(200).json({
+      success: true,
+      count: inventories.length,
+      data: inventories
+    });
+  } catch (error) {
+    console.error("Error fetching inventories:", error);
+    res.status(500).json({
+      success: false,
+      message: "Server Error"
+    });
+  }
+};
+
 export const addInventory = async (req, res) => {
   try {
     const { productName, category, quantity, price, supplier, status, categoryId, supplierId } = req.body;

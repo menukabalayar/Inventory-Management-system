@@ -1,9 +1,24 @@
+// routes/inventoryRoute.js
 import express from "express";
-
 const router = express.Router();
 
+// Example data (replace with DB query if using a database)
+const inventories = [
+  { id: 1, name: "Item A", quantity: 10 },
+  { id: 2, name: "Item B", quantity: 5 },
+];
+
+// GET all inventories
 router.get("/", (req, res) => {
-  res.json({ message: "Inventory route working" });
+  res.json(inventories);
+});
+
+// GET inventory by id
+router.get("/:id", (req, res) => {
+  const id = parseInt(req.params.id);
+  const item = inventories.find((inv) => inv.id === id);
+  if (!item) return res.status(404).json({ message: "Not found" });
+  res.json(item);
 });
 
 export default router;
