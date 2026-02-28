@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import "./addpage.css";
-import { Header } from "../../components/Header"; // ✅ import Header
+import Header from "../../components/Header";
 
 const AddInventory = () => {
   const [formData, setFormData] = useState({
