@@ -1,0 +1,46 @@
+/* mainpage.css */
+
+.main-container {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #4e73df, #1cc88a);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-family: Arial, sans-serif;
+  color: white;
+}
+
+.main-card {
+  background: white;
+  color: #333;
+  padding: 40px;
+  border-radius: 12px;
+  width: 400px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+}
+
+.main-card h1 {
+  margin-bottom: 20px;
+}
+
+.user-name {
+  margin-top: 10px;
+  color: #4e73df;
+}
+
+.logout-btn {
+  margin-top: 25px;
+  padding: 10px 20px;
+  border: none;
+  background-color: #e74a3b;
+  color: white;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: 0.3s;
+}
+
+.logout-btn:hover {
+  background-color: #c0392b;
+}

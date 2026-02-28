@@ -1,12 +1,15 @@
-import { User } from "../models/userModel.js";
+// src/controller/registerController.js
+import { User } from "../model/userModel.js";
 
-export const register = async (req, res) => {
+export const registerUser = async (req, res) => {
   try {
-    const { name, email, password } = req.body;
-    const user = await User.create({ name, email, password });
+    const { username, email, password } = req.body;
+
+    const user = await User.create({ username, email, password });
+
     res.status(201).json({
       id: user.id,
-      name: user.name,
+      username: user.username,
       email: user.email,
     });
   } catch (err) {

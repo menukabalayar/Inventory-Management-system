@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import "./addpage.css";
+import { Header } from "../../components/Header"; // ✅ import Header
 
 const AddInventory = () => {
   const [formData, setFormData] = useState({
@@ -43,6 +44,7 @@ const AddInventory = () => {
 
   return (
     <form onSubmit={handleSubmit} encType="multipart/form-data">
+      <Header />
       <input name="productName" placeholder="Product Name" onChange={handleChange} />
       <input name="category" placeholder="Category" onChange={handleChange} />
       <input name="quantity" type="number" placeholder="Quantity" onChange={handleChange} />

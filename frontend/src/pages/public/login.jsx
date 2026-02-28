@@ -1,3 +1,4 @@
+// src/pages/auth/Login.jsx
 import React, { useState } from "react";
 import { toast } from "react-hot-toast";
 import { Link, useNavigate } from "react-router-dom";
@@ -6,7 +7,6 @@ import { apiRequest } from "../../utils/api.js";
 
 export default function Login() {
   const navigate = useNavigate();
-
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
@@ -32,8 +32,10 @@ export default function Login() {
       const res = response.data;
 
       if (res.access_token) {
+        // Save token
         localStorage.setItem("token", res.access_token);
 
+        // Save user data
         const userData = {
           id: res.user.id,
           name: res.user.name,
@@ -41,35 +43,35 @@ export default function Login() {
           address: res.user.address,
           phone: res.user.phone,
           gender: res.user.gender,
+          role: res.user.role || null, // include role if backend provides
         };
 
         localStorage.setItem("user", JSON.stringify(userData));
 
         toast.success("Login successful!");
         navigate("/", { replace: true });
-
       } else {
         toast.error(res.message || "Invalid credentials");
       }
-
     } catch (err) {
       toast.dismiss(loadingToast);
-      toast.error(
-        err.response?.data?.message || "Login failed"
-      );
+      toast.error(err.response?.data?.message || "Login failed");
     } finally {
       setLoading(false);
     }
   };
 
+
+
   return (
     <div className="login-container">
-      <div className="login-box">
+      {/* Header call with role */}
+    
 
+      <div className="login-box">
         <h3 className="login-title">Login</h3>
 
         <form onSubmit={handleSubmit}>
-
           <label>Email</label>
           <input
             type="email"
@@ -93,7 +95,6 @@ export default function Login() {
           <div style={{ marginTop: "10px" }}>
             Don't have an account? <Link to="/register">Register</Link>
           </div>
-
         </form>
       </div>
     </div>
