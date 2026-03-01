@@ -27,6 +27,9 @@ app.use(express.json());
 // Connect to DB
 connection();
 
+// 🔥 Serve uploaded images
+app.use("/uploads", express.static("uploads"));
+
 // Routes
 app.use("/api/files", uploadRouter);
 app.use("/api/auth", loginRouter);
