@@ -8,7 +8,6 @@
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview"
-    
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",
@@ -20,6 +19,7 @@
     "bootstrap": "^5.3.8",
     "react": "^19.2.0",
     "react-bootstrap": "^2.10.10",
+    "react-data-table-component": "^7.7.0",
     "react-datepicker": "^9.0.0",
     "react-dom": "^19.2.0",
     "react-hook-form": "^7.70.0",
