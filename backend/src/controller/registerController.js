@@ -1,18 +1,30 @@
-// src/controller/registerController.js
+import bcrypt from "bcrypt";
 import { User } from "../model/userModel.js";
 
 export const registerUser = async (req, res) => {
   try {
-    const { username, email, password } = req.body;
+    const { name, address, email, password, phone, gender } = req.body;
 
-    const user = await User.create({ username, email, password });
+    // 🔥 HASH PASSWORD HERE
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    const newUser = await User.create({
+      name,
+      address,
+      email,
+      password: hashedPassword,   // save hashed password
+      phone,
+      gender,
+    });
 
     res.status(201).json({
-      id: user.id,
-      username: user.username,
-      email: user.email,
+      message: "User registered successfully",
+      user: newUser,
     });
-  } catch (err) {
-    res.status(500).json({ message: err.message });
+
+  } catch (error) {
+    res.status(500).json({
+      error: error.message,
+    });
   }
 };

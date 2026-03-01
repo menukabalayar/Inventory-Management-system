@@ -7,3 +7,4 @@ router.post("/login", login);
 router.post("/register", registerUser);
 
 export { router as loginRouter };
+

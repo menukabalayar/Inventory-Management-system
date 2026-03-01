@@ -1,56 +1,67 @@
 // src/pages/public/Register.jsx
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 import "../../css/register.css";
 
 export default function Register() {
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
-    username: "",
+    name: "",
+    address: "",
     email: "",
     password: "",
-    
-    mobile: "",
+    phone: "",
     gender: "",
   });
 
   const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
+
+  // 🔥 useEffect (optional - page load check)
+  useEffect(() => {
+    const user = localStorage.getItem("user");
+    if (user) {
+      navigate("/login");
+    }
+  }, [navigate]);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
-    setError(""); // clear error on change
+    setError("");
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Basic validation
-    if (!formData.username || !formData.email || !formData.password || !formData.gender || !formData.mobile) {
+    if (
+      !formData.name ||
+      !formData.address ||
+      !formData.email ||
+      !formData.password ||
+      !formData.phone ||
+      !formData.gender
+    ) {
       setError("All fields are required!");
       return;
     }
 
-    if (!/\S+@\S+\.\S+/.test(formData.email)) {
-      setError("Invalid email address");
-      return;
+    try {
+      const res = await axios.post(
+        "http://localhost:5000/api/auth/register",
+        formData
+      );
+
+      setSuccess(res.data.message);
+
+      alert("Account registered successfully!");
+
+      navigate("/login");
+
+    } catch (err) {
+      setError(err.response?.data?.error || "Registration failed");
     }
-
-    if (formData.password.length < 6) {
-      setError("Password must be at least 6 characters");
-      return;
-    }
-
-    // Here you can call your backend API
-    console.log("New User Data:", formData);
-
-    // Save user in localStorage for demo purposes
-    localStorage.setItem("user", JSON.stringify(formData));
-
-    alert("Account registered successfully!");
-
-    // Navigate to login page
-    navigate("/login");
   };
 
   return (
@@ -59,12 +70,21 @@ export default function Register() {
         <h2>Create New Account</h2>
 
         {error && <div className="error-msg">{error}</div>}
+        {success && <div className="success-msg">{success}</div>}
 
         <input
           type="text"
-          name="username"
-          placeholder="Username"
-          value={formData.username}
+          name="name"
+          placeholder="Full Name"
+          value={formData.name}
+          onChange={handleChange}
+        />
+
+        <input
+          type="text"
+          name="address"
+          placeholder="Address"
+          value={formData.address}
           onChange={handleChange}
         />
 
@@ -86,9 +106,9 @@ export default function Register() {
 
         <input
           type="text"
-          name="mobile"
-          placeholder="Mobile Number"
-          value={formData.mobile}
+          name="phone"
+          placeholder="Phone Number"
+          value={formData.phone}
           onChange={handleChange}
         />
 

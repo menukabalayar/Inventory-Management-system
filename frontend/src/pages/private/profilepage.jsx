@@ -3,7 +3,6 @@ import "./profilepage.css";
 import toast from "react-hot-toast";
 import Swal from "sweetalert2";
 import { apiRequest } from "../../utils/api";
-import Header from "../../components/Header";
 
 export default function ProfilePage({ setUser }) {
   const [isEditing, setIsEditing] = useState(false);
@@ -101,7 +100,6 @@ useEffect(() => {
 
   return (
     <div className="profile-page">
-      <Header />
       <div className="profile-card">
         <h1 className="profile-title">My Profile</h1>
 
